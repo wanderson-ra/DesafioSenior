@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 
-import reducers from './redux/reducers/AgendaReducer';
+import reducers from './redux/reducers/index';
 import Routers from './redux/router/Routers';
 
 class App extends Component {  

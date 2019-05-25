@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { widthPercentageToDP as width, heightPercentageToDP as height } from 'react-native-responsive-screen';
 
-import app from '../../apps/index';
+import app from '../../app/index';
 
 const estilos = StyleSheet.create({
 

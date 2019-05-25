@@ -20,7 +20,7 @@ class Routers extends Component {
 
                         <Scene
                             initial={true}
-                            hideNavBar={false}
+                            hideNavBar={true}
                             title='Agenda'
                             key='agenda'
                             component={gestureHandlerRootHOC(Agenda)}
