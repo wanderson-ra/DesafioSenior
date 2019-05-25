@@ -1,7 +1,7 @@
 const cores = {
     primaria: '#5e35b1',
-    primariaLight: '#280680',
-    primariaDark: '#9162e4',
+    primariaLight: '#9162e4',
+    primariaDark: '#280680',
 
     fundoTela: '#FFFFFF',
     fundoTelaSecundario: '#F2F2F2',

@@ -12,7 +12,7 @@ import estilos from './estilos';
 export default class Header extends Component {
 
     static propTypes = {
-        acaoBotaoNavegacao: PropTypes.func.isRequired,
+        acaoBotaoNavegacao: PropTypes.func,
         titulo: PropTypes.string.isRequired,
         iconesAcao: PropTypes.array
     };
