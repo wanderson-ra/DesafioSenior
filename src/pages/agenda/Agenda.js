@@ -147,11 +147,8 @@ class Agenda extends Component {
                   renderEmptyDate={this.renderEmptyDate.bind(this)}
                   rowHasChanged={this.rowHasChanged.bind(this)}
                   onCalendarToggled={calendarOpened => false}
-                  onDayPress={(day) => console.log(day)}
-                  onDayChange={(day) => false}
-                  onRefresh={() => false}
-                  refreshing={false}
-                  refreshControl={null}
+                  onDayPress={(day) => false}
+                  onDayChange={(day) => false}                                 
                   maxDate={moment(new Date()).add(3, 'months').format('YYYY-MM-DD')}
                   theme={{
                     calendarBackground: '#ffffff',
