@@ -1,19 +1,28 @@
 import {
     LOADING_AGENDA,
     ERRO_AGENDA,
-    AGENDA
+    AGENDAS,
+    AGENDA_ATUAL,
+    RECURSOS
 } from '../actions/agenda/Types';
 
 const INITIAL_STATE = {
-    agenda: [],
+    agendas: [],
     erroAgenda: false,
+    agendaAtual: null,
     loadingAgenda: false,
-
+    recursos: []
 };
 
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
+
+        case RECURSOS:
+            return { ...state, recursos: action.payload };
+
+        case AGENDA_ATUAL:
+            return { ...state, agendaAtual: action.payload };
 
         case LOADING_AGENDA:
             return { ...state, loadingAgenda: action.payload };
@@ -21,9 +30,8 @@ export default (state = INITIAL_STATE, action) => {
         case ERRO_AGENDA:
             return { ...state, erroAgenda: action.payload };
 
-        case AGENDA:
-                console.log(action.payload);
-            return { ...state, agenda: action.payload };
+        case AGENDAS:
+            return { ...state, agendas: action.payload };
 
         default:
             return state;

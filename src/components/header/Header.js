@@ -5,7 +5,7 @@ import { View, Text, Platform } from 'react-native';
 import IconeAcao from '../icone-acao/IconeAcao';
 import Ripple from '../../components/ripple/Ripple';
 import app from '../../app/index';
-import { Header as H } from 'react-native-elements'
+import { Header as HeaderNativeElements } from 'react-native-elements'
 
 import estilos from './estilos';
 
@@ -30,7 +30,7 @@ export default class Header extends Component {
 
         return (
 
-            <H
+            <HeaderNativeElements
                 statusBarProps={{
                     translucent: true,
                 }}

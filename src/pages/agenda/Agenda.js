@@ -1,30 +1,40 @@
 import React, { Component, Fragment } from 'react';
-import { View, StatusBar, Text, StyleSheet } from 'react-native';
+import { View, StatusBar, Text } from 'react-native';
 import { widthPercentageToDP as width, heightPercentageToDP as height } from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
 import { Agenda as AgendaCalendario } from 'react-native-calendars';
-
+import { LocaleConfig } from 'react-native-calendars'
+import moment from 'moment';
+import RNPickerSelect from 'react-native-picker-select';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import ProgressDialog from '../../components/progress-dialog/ProgressDialog';
 import app from '../../app/index';
-import estilos from './estilos';
+import estilos, { pickerSelectStyles } from './estilos';
 import FalhaConexao from '../../components/falha-conexao/FalhaConexao';
 import Header from '../../components/header/Header';
 
 import {
-  getAgenda
+  getAgenda,
+  mudarAgendaRecurso
 } from '../../redux/actions/agenda/AgendaAction';
+import AgendaItem from './agenda-item/AgendaItem';
 
 
+LocaleConfig.locales['pt-BR'] = {
+  monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+  monthNamesShort: ['Jan.', 'Fev.', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul.', 'Ago', 'Set.', 'Out.', 'Nov.', 'Dez.'],
+  dayNames: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+  dayNamesShort: ['Seg.', 'Ter.', 'Qua.', 'Qui.', 'Sex.', 'Sáb.', 'Dom.']
+};
 
-
-
+LocaleConfig.defaultLocale = 'pt-BR';
 class Agenda extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      items: {}
+      recurso: undefined
     };
   }
 
@@ -46,7 +56,7 @@ class Agenda extends Component {
       <Fragment>
         <StatusBar
           backgroundColor={app.cores.primariaDark}
-          barStyle="dark-content"
+          barStyle="light-content"
         />
 
         <Header
@@ -66,41 +76,18 @@ class Agenda extends Component {
     this.props.getAgenda('101');
   }
 
-  loadItems(day) {
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-          const numItems = Math.floor(Math.random() * 5);
-          for (let j = 0; j < numItems; j++) {
-            this.state.items[strTime].push({
-              name: 'Item for ' + strTime,
-              height: Math.max(50, Math.floor(Math.random() * 150))
-            });
-          }
-        }
-      }
-      //console.log(this.state.items);
-      const newItems = {};
-      Object.keys(this.state.items).forEach(key => { newItems[key] = this.state.items[key]; });
-      this.setState({
-        items: newItems
-      });
-    }, 1000);
-    // console.log(`Load Items for ${day.year}-${day.month}`);
-  }
-
-  renderItem(item) {
+  renderItem(recurso) {
     return (
-      <View style={[styles.item, { height: item.height }]}><Text>{item.name}</Text></View>
+      <AgendaItem recurso={recurso} />
     );
   }
 
   renderEmptyDate() {
     return (
-      <View style={styles.emptyDate}><Text>This is empty date!</Text></View>
+      <View style={estilos.item}>
+        <Text>{app.strings.dataSemEventos}
+        </Text>
+      </View>
     );
   }
 
@@ -108,33 +95,29 @@ class Agenda extends Component {
     return r1.name !== r2.name;
   }
 
-  timeToString(time) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
-
-
   render() {
-
     const {
-      agenda,
+      agendas,
       erroAgenda,
-      loadingAgenda
+      loadingAgenda,
+      agendaAtual,
+      recursos,
+      mudarAgendaRecurso
     } = this.props;
+
+    const { recurso } = this.state;
 
     if (loadingAgenda) {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={estilos.containerSecundario}>
           {
             this.header()
           }
         </View>
       );
-    }
-
-    else if (!loadingAgenda && erroAgenda) {
+    } else if (!loadingAgenda && erroAgenda) {
       return (
-        <View style={{ flex: 1 }}>
+        <View style={estilos.containerSecundario}>
           {
             this.header()
           }
@@ -143,72 +126,107 @@ class Agenda extends Component {
         </View>
       )
     } else {
-
       return (
-        <View style={{
-          flex: 1
-        }}>
+        <View style={estilos.containerSecundario}>
           {
             this.header()
           }
+          {
+            agendaAtual ?
+              <View style={estilos.container}>
+                <AgendaCalendario
+                  style={{
+                    flex: 1,
+                    width: width('100%'),
+                    height: height('80%')
+                  }}
+                  items={agendaAtual.agenda}
+                  loadItemsForMonth={month => false}
+                  selected={moment(new Date()).format('YYYY-MM-DD')}
+                  renderItem={this.renderItem.bind(this)}
+                  renderEmptyDate={this.renderEmptyDate.bind(this)}
+                  rowHasChanged={this.rowHasChanged.bind(this)}
+                  onCalendarToggled={calendarOpened => false}
+                  onDayPress={(day) => console.log(day)}
+                  onDayChange={(day) => false}
+                  onRefresh={() => false}
+                  refreshing={false}
+                  refreshControl={null}
+                  maxDate={moment(new Date()).add(3, 'months').format('YYYY-MM-DD')}
+                  theme={{
+                    calendarBackground: '#ffffff',
+                    agendaDayTextColor: app.cores.primariaDark,
+                    agendaDayNumColor: app.cores.primariaDark,
+                    agendaKnobColor: app.cores.primariaDark,
+                    textSectionTitleColor: '#b6c1cd',
+                    selectedDayBackgroundColor: app.cores.primariaDark,
+                    selectedDayTextColor: '#ffffff',
+                    todayTextColor: app.cores.primariaDark,
+                    dayTextColor: app.cores.fonte.primaria,
+                    textDisabledColor: '#d9e1e8',
+                    dotColor: app.cores.primariaDark,
+                    selectedDotColor: '#ffffff',
+                    monthTextColor: app.cores.primariaLight,
+                    indicatorColor: app.cores.primariaLight,
+                    textDayFontWeight: '300',
+                    textMonthFontWeight: 'bold',
+                    textDayHeaderFontWeight: '300',
+                    textDayFontSize: app.fonts.pequena,
+                    textMonthFontSize: app.fonts.pequena,
+                    textDayHeaderFontSize: app.fonts.pequena
+                  }}
+                />
+              </View> :
+              null
+          }
 
-          <View style={estilos.container}>
-            <AgendaCalendario
-              style={{ flex: 1 , width: width('100%')}}
-              items={this.state.items}
-              loadItemsForMonth={this.loadItems.bind(this)}
-              selected={'2017-05-16'}
-              renderItem={this.renderItem.bind(this)}
-              renderEmptyDate={this.renderEmptyDate.bind(this)}
-              rowHasChanged={this.rowHasChanged.bind(this)}
-            // markingType={'period'}
-            // markedDates={{
-            //    '2017-05-08': {textColor: '#666'},
-            //    '2017-05-09': {textColor: '#666'},
-            //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-            //    '2017-05-21': {startingDay: true, color: 'blue'},
-            //    '2017-05-22': {endingDay: true, color: 'gray'},
-            //    '2017-05-24': {startingDay: true, color: 'gray'},
-            //    '2017-05-25': {color: 'gray'},
-            //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-            // monthFormat={'yyyy'}
-            // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-            //renderDay={(day, item) => (<Text>{day ? day.day: 'item'}</Text>)}
+          <View style={estilos.wrapperPicker}>
+
+            <RNPickerSelect
+              doneText='Selecionar'
+              value={recurso ? recurso : agendaAtual ? agendaAtual.idRecurso : recurso}
+              placeholder={{
+                label: 'Selecione o colaborador',
+                value: null,
+                color: 'gray',
+              }}
+              items={recursos}
+              onValueChange={(value) => {
+                mudarAgendaRecurso(agendas, value);
+                this.setState({
+                  recurso: value,
+                });
+              }}
+
+              style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={true}
+              ref={(el) => {
+                this.picker = el;
+              }}
+              Icon={() => {
+                return <Icon name="arrow-down-drop-circle" size={app.fonts.iconeMedio} color={app.cores.primariaDark} />;
+              }}
             />
           </View>
-
         </View>
       )
     }
   }
 }
 
-const styles = StyleSheet.create({
-  item: {
-    backgroundColor: 'white',
-    flex: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginRight: 10,
-    marginTop: 17
-  },
-  emptyDate: {
-    height: 15,
-    flex: 1,
-    paddingTop: 30
-  }
-});
-
 const mapStateToProps = state => (
   {
-    agenda: state.AgendaReducer.agenda,
+    agendaAtual: state.AgendaReducer.agendaAtual,
+    agendas: state.AgendaReducer.agendas,
     erroAgenda: state.AgendaReducer.erroAgenda,
     loadingAgenda: state.AgendaReducer.loadingAgenda,
+    recursos: state.AgendaReducer.recursos
   }
 );
 
 export default connect(mapStateToProps, {
-  getAgenda
+  getAgenda,
+  mudarAgendaRecurso
 })(Agenda);
 
 
