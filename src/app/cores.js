@@ -3,6 +3,14 @@ const cores = {
     primariaLight: '#9162e4',
     primariaDark: '#280680',
 
+    calendario: {
+        calendarBackground: '#FFFFFF',
+        textSectionTitleColor: '#b6c1cd',
+        selectedDayTextColor: '#ffffff',
+        textDisabledColor: '#d9e1e8',
+        selectedDotColor: '#ffffff'
+    },
+
     fundoTela: '#FFFFFF',
     fundoTelaSecundario: '#F2F2F2',
     icone: '#777777',

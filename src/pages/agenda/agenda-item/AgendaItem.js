@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { widthPercentageToDP as width, heightPercentageToDP as height } from 'react-native-responsive-screen';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import app from '../../../app/index';
 import estilos from './estilos';
 import Ripple from '../../../components/ripple/Ripple';
+import { formatarData } from '../../../utils/formatter';
 
 export default class AgendaItem extends Component {
 
@@ -31,23 +29,23 @@ export default class AgendaItem extends Component {
                         <Text
                             lineBreakMode='tail'
                             numberOfLines={1}
-                            style={estilos.descricao}>{recurso.descricaoTarefa}
-                        </Text>
+                            style={estilos.textoHorario}>
+                            {formatarData(recurso.dataHoraInicioFormatada, 'DD/MM/YYYY H:mm', 'H:mm')} - {formatarData(recurso.dataHoraFimFormatada, 'DD/MM/YYYY H:mm', 'H:mm')}</Text>
 
                         <Text
                             lineBreakMode='tail'
                             numberOfLines={1}
-                            style={estilos.data}>{moment(new Date(recurso.dataHoraInicio)).format('DD/MM/YYYY')}
+                            style={estilos.data}>{formatarData(recurso.dataHoraInicioFormatada, 'DD/MM/YYYY H:mm', 'DD/MM/YYYY')}
                         </Text>
                     </View>
 
                     <View style={estilos.wrapperHorario}>
-
                         <Text
                             lineBreakMode='tail'
-                            numberOfLines={1}
-                            style={estilos.textoHorario}>
-                            {moment(new Date(recurso.dataHoraInicio)).format('H:mm')} - {moment(new Date(recurso.dataHoraFim)).format('H:mm')}</Text>
+                            numberOfLines={2}
+                            style={estilos.descricao}>{recurso.descricaoTarefa}
+                        </Text>
+
                     </View>
 
                 </View>

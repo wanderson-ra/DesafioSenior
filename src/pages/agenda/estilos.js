@@ -36,7 +36,11 @@ const estilos = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: app.cores.fundoTela,
   },
-
+  agenda: {
+    flex: 1,
+    width: width('100%'),
+    height: height('80%')
+  },
   wrapperPicker: {
     height: height('10%'),
     justifyContent: 'flex-start',

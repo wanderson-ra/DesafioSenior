@@ -7,7 +7,8 @@ import {
     AGENDA_ATUAL,
     RECURSOS
 } from './Types';
-import moment from 'moment';
+
+import { formatarChaveData } from '../../../utils/formatter';
 
 
 export const getAgenda = (idUsuario) => async dispatch => {
@@ -31,7 +32,8 @@ export const getAgenda = (idUsuario) => async dispatch => {
             _.forEach(response.data.retorno.mapaAlocacao.recursos, item => {
                 let tarefas = {}
                 _.forEach(item.tarefasData, tarefa => {
-                    let dia = moment(new Date(tarefa.dia.Data)).format('YYYY-MM-DD');
+                    let data = tarefa.dia.Data.split('T')[0]
+                    let dia = formatarChaveData(data);
                     tarefas[dia] = tarefa.tarefas;
                 });
 

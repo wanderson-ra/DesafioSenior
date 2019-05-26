@@ -10,10 +10,10 @@ const estilos = StyleSheet.create({
         flex: 1,
         borderRadius: height('0.5%'),
         padding: height('1%'),
-        marginRight: height('1%'),
+        marginRight: height('0.5%'),
         marginTop: height('2%'),
         marginBottom: height('2%'),
-        height: height('10%'),
+        height: height('13%'),
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -22,18 +22,18 @@ const estilos = StyleSheet.create({
     subItem: {
         flex: 1,
         justifyContent: 'space-evenly',
-        height: height('8%')
+        height: height('13%')
     },
 
     data: {
         width: width('20%'),
-        fontSize: app.fonts.pequena,
+        fontSize: app.fonts.micro,
         color: app.cores.fonte.primaria,
         marginRight: width('5%')
     },
 
     descricao: {
-        width: width('30%'),
+        width: width('40%'),
         fontSize: app.fonts.pequena,
         color: app.cores.fonte.primaria
     },
@@ -45,7 +45,7 @@ const estilos = StyleSheet.create({
     },
 
     textoHorario: {
-        width: width('40%'),
+        width: width('30%'),
         fontSize: app.fonts.micro,
         color: app.cores.fonte.primaria
     },

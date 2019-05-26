@@ -1,10 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { View, StatusBar, Text } from 'react-native';
-import { widthPercentageToDP as width, heightPercentageToDP as height } from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
 import { Agenda as AgendaCalendario } from 'react-native-calendars';
 import { LocaleConfig } from 'react-native-calendars'
-import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -13,6 +11,7 @@ import app from '../../app/index';
 import estilos, { pickerSelectStyles } from './estilos';
 import FalhaConexao from '../../components/falha-conexao/FalhaConexao';
 import Header from '../../components/header/Header';
+import { formatarChaveData } from '../../utils/formatter';
 
 import {
   getAgenda,
@@ -20,15 +19,15 @@ import {
 } from '../../redux/actions/agenda/AgendaAction';
 import AgendaItem from './agenda-item/AgendaItem';
 
-
-LocaleConfig.locales['pt-BR'] = {
+LocaleConfig.locales['pt'] = {
   monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-  monthNamesShort: ['Jan.', 'Fev.', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul.', 'Ago', 'Set.', 'Out.', 'Nov.', 'Dez.'],
-  dayNames: ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-  dayNamesShort: ['Seg.', 'Ter.', 'Qua.', 'Qui.', 'Sex.', 'Sáb.', 'Dom.']
+  monthNamesShort: ['Jan.', 'Fev.', 'Mar.', 'Abr.', 'Mai.', 'Jun.', 'Jul.', 'Ago.', 'Set.', 'Out.', 'Nov.', 'Dez.'],
+  dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+  dayNamesShort: ['Dom.', 'Seg.', 'Ter.', 'Qua.', 'Qui.', 'Sex.', 'Sáb.'],
 };
 
-LocaleConfig.defaultLocale = 'pt-BR';
+LocaleConfig.defaultLocale = 'pt';
+
 class Agenda extends Component {
 
   constructor(props) {
@@ -135,42 +134,38 @@ class Agenda extends Component {
             agendaAtual ?
               <View style={estilos.container}>
                 <AgendaCalendario
-                  style={{
-                    flex: 1,
-                    width: width('100%'),
-                    height: height('80%')
-                  }}
+                  style={estilos.agenda}
                   items={agendaAtual.agenda}
                   loadItemsForMonth={month => false}
-                  selected={moment(new Date()).format('YYYY-MM-DD')}
-                  renderItem={this.renderItem.bind(this)}
-                  renderEmptyDate={this.renderEmptyDate.bind(this)}
-                  rowHasChanged={this.rowHasChanged.bind(this)}
+                  selected={formatarChaveData(new Date())}
+                  renderItem={item => this.renderItem(item)}
+                  renderEmptyDate={() => this.renderEmptyDate()}
+                  rowHasChanged={(r1, r2) => this.rowHasChanged(r1, r2)}
                   onCalendarToggled={calendarOpened => false}
                   onDayPress={(day) => false}
-                  onDayChange={(day) => false}                                 
-                  maxDate={moment(new Date()).add(3, 'months').format('YYYY-MM-DD')}
+                  onDayChange={(day) => false}
                   theme={{
-                    calendarBackground: '#ffffff',
+                    calendarBackground: app.cores.calendario.calendarBackground,
                     agendaDayTextColor: app.cores.primariaDark,
                     agendaDayNumColor: app.cores.primariaDark,
                     agendaKnobColor: app.cores.primariaDark,
-                    textSectionTitleColor: '#b6c1cd',
+                    textSectionTitleColor: app.cores.calendario.textSectionTitleColor,
                     selectedDayBackgroundColor: app.cores.primariaDark,
-                    selectedDayTextColor: '#ffffff',
+                    selectedDayTextColor: app.cores.calendario.selectedDayTextColor,
                     todayTextColor: app.cores.primariaDark,
                     dayTextColor: app.cores.fonte.primaria,
-                    textDisabledColor: '#d9e1e8',
+                    textDisabledColor: app.cores.calendario.textDisabledColor,
                     dotColor: app.cores.primariaDark,
-                    selectedDotColor: '#ffffff',
+                    selectedDotColor: app.cores.calendario.selectedDotColor,
                     monthTextColor: app.cores.primariaLight,
                     indicatorColor: app.cores.primariaLight,
                     textDayFontWeight: '300',
                     textMonthFontWeight: 'bold',
                     textDayHeaderFontWeight: '300',
-                    textDayFontSize: app.fonts.pequena,
-                    textMonthFontSize: app.fonts.pequena,
-                    textDayHeaderFontSize: app.fonts.pequena
+                    textDayFontSize: app.fonts.micro,
+                    textMonthFontSize: app.fonts.micro,
+                    textDayHeaderFontSize: app.fonts.media,
+
                   }}
                 />
               </View> :
@@ -180,10 +175,10 @@ class Agenda extends Component {
           <View style={estilos.wrapperPicker}>
 
             <RNPickerSelect
-              doneText='Selecionar'
+              doneText={app.strings.doneTextPicker}
               value={recurso ? recurso : agendaAtual ? agendaAtual.idRecurso : recurso}
               placeholder={{
-                label: 'Selecione o colaborador',
+                label: app.strings.placeholderPicker,
                 value: null,
                 color: 'gray',
               }}

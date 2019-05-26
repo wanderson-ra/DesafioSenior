@@ -9,7 +9,7 @@ import {
 const INITIAL_STATE = {
     agendas: [],
     erroAgenda: false,
-    agendaAtual: null,
+    agendaAtual: {},
     loadingAgenda: false,
     recursos: []
 };
