@@ -18,16 +18,10 @@ const estilos = StyleSheet.create({
     marginRight: height('1%'),
     marginTop: height('2%'),
     marginBottom: height('2%'),
-    height: height('10%'),
+    height: height('13%'),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
-  },
-
-  emptyDate: {
-    height: height('1.5%'),
-    flex: 1,
-    paddingTop: height('3%')
   },
 
   container: {
