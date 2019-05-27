@@ -90,6 +90,14 @@ class Agenda extends Component {
     );
   }
 
+  renderEmptyData() {
+    return (
+      <View style={estilos.renderEmptyData}>
+        <Text style={estilos.textoEmptyData}>{app.strings.semLancamentosPeriodo}</Text>
+      </View>
+    )
+  }
+
   rowHasChanged(r1, r2) {
     return r1.name !== r2.name;
   }
@@ -140,6 +148,7 @@ class Agenda extends Component {
                   selected={formatarChaveData(new Date())}
                   renderItem={item => this.renderItem(item)}
                   renderEmptyDate={() => this.renderEmptyDate()}
+                  renderEmptyData={() => this.renderEmptyData()}
                   rowHasChanged={(r1, r2) => this.rowHasChanged(r1, r2)}
                   onCalendarToggled={calendarOpened => false}
                   onDayPress={(day) => false}

@@ -42,6 +42,19 @@ const estilos = StyleSheet.create({
     paddingVertical: height('1%'),
     borderTopColor: app.cores.primaria,
     borderTopWidth: height('0.1%'),
+  },
+
+  renderEmptyData: {
+    backgroundColor: app.cores.fundoTela,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
+  },
+
+  textoEmptyData: {
+    fontSize: app.fonts.media,
+    color: app.cores.fonte.primaria,
+    fontWeight: '600'
   }
 });
 

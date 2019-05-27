@@ -5,7 +5,8 @@ const strings = {
     botaoTentarNovamente: 'Tentar novamente',
     dataSemEventos: 'Não há tarefas agendadas nesse dia!',
     doneTextPicker: 'Selecionar',
-    placeholderPicker: 'Selecione o colaborador'
+    placeholderPicker: 'Selecione o colaborador',
+    semLancamentosPeriodo: 'Não há lançamentos nesse periodo.',
 }
 
 export default strings;
